@@ -57,14 +57,17 @@ user = os.getlogin()
 
 createDirectory("alpha67_MP", "C:/Users/"+user)
 
+createDirectory("mods", "C:/Users/"+user+"/alpha67_MP")
 
-urllib.request.urlretrieve(url, "C:/Users/"+user+"/alpha67_MP/mp.zip")
+
+#urllib.request.urlretrieve(url, "C:/Users/"+user+"/alpha67_MP/mods/mp.zip")
 
 original = r'C:/Users/'+user+'/alpha67_MP/mp.zip'
 target = adress+"/ModPack.zip"
 
-shutil.copyfile(original, target)
+#shutil.copyfile(original, target)
 
 import zipfile
-with zipfile.ZipFile(adress, 'r') as zip_ref:
-    zip_ref.extractall("ModPack.zip")
+with ZipFile('C:/Users/'+user+'/alpha67_MP/mp.zip', 'r') as zip:
+    zip.printdir()
+    zip.extractall() 
