@@ -37,22 +37,21 @@ def versionCheck():
     data = json.loads(response.read())
     data = data[0]
     data = data["tag_name"]
-    print(data)
 
     da = date.today()
     now = datetime.now()
-    print(da)
 
     try:
         f = open('C:/Users/' + user + '/alpha67_MP/test.json')
 
-        print("le fichier existe")
+        print("File data is already create.")
+        time.sleep(0.5)
+        print("checking the current version.")
 
         with open('C:/Users/' + user + '/alpha67_MP/test.json', 'r') as json_file:
             uInfo = json.load(json_file)
             uInfo = literal_eval(uInfo)
             uInfo = uInfo["version"]
-            print(uInfo)
         if uInfo != data:
             return True
         else:
@@ -61,7 +60,7 @@ def versionCheck():
     except IOError:
         with open('C:/Users/' + user + '/alpha67_MP/test.json', 'w') as outfile:
             json.dump(str({"time": str(now), "version": None}), outfile)
-        print("File not accessible")
+        print("File not accessible, starting his creation")
         return True
 
 
@@ -81,15 +80,15 @@ if versionCheck() == True:
 
 
 
-    print("SVP veuillez renseigner où est votre dossier mods minecraft.")
+    print(Back.WHITE+Fore.BLACK+"SVP veuillez renseigner où est votre dossier mods minecraft.")
 
     time.sleep(2)
 
     adress = get()
 
-    print("Nous allons installer les mods dans ce repèrtoir : "+adress)
+    print(Back.WHITE+Fore.BLACK+"Nous allons installer les mods dans ce repèrtoir : "+adress)
     time.sleep(1)
-    print("connection au server")
+    print(Back.BLACK+Fore.WHITE+"connection au server")
     time.sleep(0.5)
     print(Fore.WHITE+"""    using System.Data.SqlClient;
     
