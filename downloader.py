@@ -8,12 +8,13 @@ from tkinter import filedialog
 import os
 import os.path
 import shutil
+from colorama import Fore, Back, Style
+from datetime import date, datetime
+from ast import literal_eval
 
 def createDirectory(name, parent):
     path = parent+"/"+name
-    print(path)
     isdir = os.path.isdir(path)
-    print(isdir)
     if isdir == False:
 
         directory = name
@@ -29,45 +30,115 @@ def get():
     return folder_path
 
 
-try:
-    None
-except:
-    print("sorry but the program can't connect to internet")
-response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/desktop-tutorial/releases")
-data = json.loads(response.read())
-data = data[0]
-data = data["assets"]
-data = data[0]
-url = data["browser_download_url"]
+def versionCheck():
+    user = os.getlogin()
+    data = """{ok: salut}"""
+    response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/desktop-tutorial/releases")
+    data = json.loads(response.read())
+    data = data[0]
+    data = data["tag_name"]
+    print(data)
+
+    da = date.today()
+    now = datetime.now()
+    print(da)
+
+    try:
+        f = open('C:/Users/' + user + '/alpha67_MP/test.json')
+
+        print("le fichier existe")
+
+        with open('C:/Users/' + user + '/alpha67_MP/test.json', 'r') as json_file:
+            uInfo = json.load(json_file)
+            uInfo = literal_eval(uInfo)
+            uInfo = uInfo["version"]
+            print(uInfo)
+        if uInfo != data:
+            return True
+        else:
+            return False
+        # Do something with the file
+    except IOError:
+        with open('C:/Users/' + user + '/alpha67_MP/test.json', 'w') as outfile:
+            json.dump(str({"time": str(now), "version": None}), outfile)
+        print("File not accessible")
+        return True
 
 
-print(url)
+versionCheck()
 
-print("SVP veuillez renseigner où est votre dossier mods minecraft.")
-
-time.sleep(2)
-
-adress = get()
-
-print("démarrage du téléchargement.")
-
-print(adress)
-
-user = os.getlogin()
-
-createDirectory("alpha67_MP", "C:/Users/"+user)
-
-createDirectory("mods", "C:/Users/"+user+"/alpha67_MP")
+if versionCheck() == True:
+    try:
+        None
+    except:
+        print("sorry but the program can't connect to internet")
+    response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/desktop-tutorial/releases")
+    data = json.loads(response.read())
+    data = data[0]
+    data = data["assets"]
+    data = data[0]
+    url = data["browser_download_url"]
 
 
-#urllib.request.urlretrieve(url, "C:/Users/"+user+"/alpha67_MP/mods/mp.zip")
 
-original = r'C:/Users/'+user+'/alpha67_MP/mp.zip'
-target = adress+"/ModPack.zip"
+    print("SVP veuillez renseigner où est votre dossier mods minecraft.")
 
-#shutil.copyfile(original, target)
+    time.sleep(2)
 
-import zipfile
-with ZipFile('C:/Users/'+user+'/alpha67_MP/mp.zip', 'r') as zip:
-    zip.printdir()
-    zip.extractall() 
+    adress = get()
+
+    print("Nous allons installer les mods dans ce repèrtoir : "+adress)
+    time.sleep(1)
+    print("connection au server")
+    time.sleep(0.5)
+    print(Fore.WHITE+"""    using System.Data.SqlClient;
+    
+        var conn = new SqlConnection();
+        conn.ConnectionString = 
+                      "Data Source=git.677;" + 
+                      "Initial Catalog=duckdns.org;" + 
+                      "Integrated Security=SSPI;"; 
+        conn.Open();""")
+    time.sleep(0.4)
+    print("démarrage du téléchargement...")
+
+
+    user = os.getlogin()
+
+    createDirectory("alpha67_MP", "C:/Users/"+user)
+
+    createDirectory("mods", "C:/Users/"+user+"/alpha67_MP")
+
+
+    urllib.request.urlretrieve(url, "C:/Users/"+user+"/alpha67_MP/mods/mp.zip")
+
+    original = r'C:/Users/'+user+'/alpha67_MP/mp.zip'
+    target = adress+"/ModPack.zip"
+
+    #shutil.copyfile(original, target)
+
+    from zipfile import ZipFile
+    with ZipFile('C:/Users/'+user+'/alpha67_MP/mods/mp.zip', 'r') as zip:
+        zip.printdir()
+        zip.extractall(adress)
+
+    user = os.getlogin()
+    data = """{ok: salut}"""
+    response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/desktop-tutorial/releases")
+    data = json.loads(response.read())
+    data = data[0]
+    data = data["tag_name"]
+    print(data)
+
+    da = date.today()
+    now = datetime.now()
+    print(da)
+
+    with open('C:/Users/' + user + '/alpha67_MP/test.json', 'w') as outfile:
+        json.dump(str({"time": str(now), "version": data}), outfile)
+
+    for i in range(100):
+        print(Fore.GREEN+"unziping file "+str(i)+"%, directory get")
+        time.sleep(0.005)
+else:
+    print(Fore.GREEN+"vous êtes à jour.")
