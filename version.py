@@ -65,6 +65,8 @@ def needUpdate():
 
 
     def needUpdateJar():
+
+        i = 0
         ok = ""
 
         path = r'C:\Users\evanm\AppData\Roaming\.minecraft\mods'
@@ -80,20 +82,23 @@ def needUpdate():
         if existFile() == False:
             f = open('C:/Users/' + user + '/alpha67_MP/listMod.txt', 'w+')
 
-        if existFile() == True:
-            with open('C:/Users/' + user + '/alpha67_MP/listMod.txt') as f:
-                contents = f.readlines()
-                print(contents)
-                with open('C:/Users/' + user + '/alpha67_MP/listMod.txt', 'w') as f:
-                    f.write('')
-                # print(contents)
 
         with open('C:/Users/' + user + '/alpha67_MP/listMod.txt', 'a') as f:
             for files in os.listdir(path):
                 if os.path.isfile(os.path.join(path, files)):
-                    # print(files)
+                    i = i+1
                     ok = ok + files
                     f.write(files)
+            if i == 0:
+                return True
+            else:
+                with open('C:/Users/' + user + '/alpha67_MP/listMod.txt') as f:
+                    contents = f.readlines()
+                print(contents)
+                with open('C:/Users/' + user + '/alpha67_MP/listMod.txt', 'w') as f:
+                    f.write('')
+                    # print(contents)
+
 
         contents = contents[0]
 
