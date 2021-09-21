@@ -12,6 +12,18 @@ from colorama import Fore, Back, Style
 from datetime import date, datetime
 from ast import literal_eval
 
+def get():
+    tkinter.Tk().withdraw()
+    user = os.getlogin()
+    folder_path = dirName = filedialog.askdirectory(initialdir="C:/Users/"+user+"/AppData/Roaming/.minecraft", title='Please select a directory')
+    return folder_path
+
+print(Back.WHITE+Fore.BLACK+"SVP veuillez renseigner où est votre dossier mods minecraft.")
+
+time.sleep(2)
+
+adress = get()
+
 def createDirectory(name, parent):
     path = parent+"/"+name
     isdir = os.path.isdir(path)
@@ -23,20 +35,20 @@ def createDirectory(name, parent):
         os.mkdir(path)
         print("Directory '% s' created" % directory)
 
-def get():
-    tkinter.Tk().withdraw()
-    user = os.getlogin()
-    folder_path = dirName = filedialog.askdirectory(initialdir="C:/Users/"+user+"/AppData/Roaming/.minecraft", title='Please select a directory')
-    return folder_path
-
 
 def versionCheck():
+
     user = os.getlogin()
+
+    createDirectory("alpha67_MP", "C:/Users/"+user)
+
+    createDirectory("mods", "C:/Users/"+user+"/alpha67_MP")
     data = """{ok: salut}"""
     response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/desktop-tutorial/releases")
     data = json.loads(response.read())
     data = data[0]
     data = data["tag_name"]
+
 
     da = date.today()
     now = datetime.now()
@@ -64,6 +76,8 @@ def versionCheck():
         return True
 
 
+
+
 versionCheck()
 
 if versionCheck() == True:
@@ -79,12 +93,6 @@ if versionCheck() == True:
     url = data["browser_download_url"]
 
 
-
-    print(Back.WHITE+Fore.BLACK+"SVP veuillez renseigner où est votre dossier mods minecraft.")
-
-    time.sleep(2)
-
-    adress = get()
 
     print(Back.WHITE+Fore.BLACK+"Nous allons installer les mods dans ce repèrtoir : "+adress)
     time.sleep(1)
@@ -104,9 +112,6 @@ if versionCheck() == True:
 
     user = os.getlogin()
 
-    createDirectory("alpha67_MP", "C:/Users/"+user)
-
-    createDirectory("mods", "C:/Users/"+user+"/alpha67_MP")
 
 
     urllib.request.urlretrieve(url, "C:/Users/"+user+"/alpha67_MP/mods/mp.zip")
@@ -133,8 +138,17 @@ if versionCheck() == True:
     now = datetime.now()
     print(da)
 
+    with open('C:/Users/' + user + '/alpha67_MP/ListMods.txt', 'w') as f:
+        f.write('')
+
+    with open('C:/Users/' + user + '/alpha67_MP/ListMods.txt', 'a') as f:
+        for files in os.listdir(adress):
+            if os.path.isfile(os.path.join(adress, files)):
+                print(files)
+                f.write(files+"\n")
+
     with open('C:/Users/' + user + '/alpha67_MP/test.json', 'w') as outfile:
-        json.dump(str({"time": str(now), "version": data}), outfile)
+        json.dump(str({"time": str(now), "version": data, "path": adress}), outfile)
 
     for i in range(100):
         print(Fore.GREEN+"unziping file "+str(i)+"%, directory get")
