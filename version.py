@@ -42,13 +42,13 @@ def needUpdate():
         now = datetime.now()
 
         try:
-            f = open('C:/Users/' + user + '/alpha67_MP/test.json')
+            f = open('C:/Users/' + user + '/alpha67_MP/data.json')
 
             print("File data is already create.")
             time.sleep(0.5)
             print("checking the current version.")
 
-            with open('C:/Users/' + user + '/alpha67_MP/test.json', 'r') as json_file:
+            with open('C:/Users/' + user + '/alpha67_MP/data.json', 'r') as json_file:
                 uInfo = json.load(json_file)
                 uInfo = literal_eval(uInfo)
                 uInfo = uInfo["version"]
@@ -58,7 +58,7 @@ def needUpdate():
                 return False
             # Do something with the file
         except IOError:
-            with open('C:/Users/' + user + '/alpha67_MP/test.json', 'w') as outfile:
+            with open('C:/Users/' + user + '/alpha67_MP/data.json', 'w') as outfile:
                 json.dump(str({"time": str(now), "version": None}), outfile)
             print("File not accessible, starting his creation")
             return True
