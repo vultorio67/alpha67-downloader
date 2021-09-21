@@ -107,8 +107,19 @@ if update == True:
     with open('C:/Users/' + user + '/alpha67_MP/test.json', 'w') as outfile:
         json.dump(str({"time": str(now), "version": data, "path": adress}), outfile)
 
+
     for i in range(100):
         print(Fore.GREEN+"unziping file "+str(i)+"%, directory get")
         time.sleep(0.005)
+
+    with open('C:/Users/' + user + '/alpha67_MP/listMod.txt', 'w') as f:
+        f.write('')
+
+    with open('C:/Users/' + user + '/alpha67_MP/listMod.txt', 'a') as f:
+        for files in os.listdir(adress):
+            if os.path.isfile(os.path.join(adress, files)):
+                f.write(files)
+                print(files)
+
 else:
     print(Fore.GREEN+"vous êtes à jour.")

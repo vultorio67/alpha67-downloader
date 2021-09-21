@@ -12,6 +12,7 @@ from colorama import Fore, Back, Style
 from datetime import date, datetime
 from ast import literal_eval
 
+user = os.getlogin()
 
 def createDirectory(name, parent):
     path = parent + "/" + name
@@ -70,23 +71,24 @@ def needUpdate():
 
         def existFile():
             try:
-                open('listMod.txt', 'r')
+                open('C:/Users/' + user + '/alpha67_MP/listMod.txt', 'r')
                 return True
             except:
 
                 return False
 
         if existFile() == False:
-            with open('listMod.txt', 'w') as f:
-                f.write('')
+            f = open('C:/Users/' + user + '/alpha67_MP/listMod.txt', 'w+')
 
-        with open('listMod.txt') as f:
-            contents = f.readlines()
-            with open('listMod.txt', 'w') as f:
-                f.write('')
-            # print(contents)
+        if existFile() == True:
+            with open('C:/Users/' + user + '/alpha67_MP/listMod.txt') as f:
+                contents = f.readlines()
+                print(contents)
+                with open('C:/Users/' + user + '/alpha67_MP/listMod.txt', 'w') as f:
+                    f.write('')
+                # print(contents)
 
-        with open('listMod.txt', 'a') as f:
+        with open('C:/Users/' + user + '/alpha67_MP/listMod.txt', 'a') as f:
             for files in os.listdir(path):
                 if os.path.isfile(os.path.join(path, files)):
                     # print(files)
@@ -100,8 +102,8 @@ def needUpdate():
         else:
             return True
 
-    jar = needUpdateJar()
     jsonU = needUpdateJson()
+    jar = needUpdateJar()
 
     if jar == True:
         print("jar is modified")
