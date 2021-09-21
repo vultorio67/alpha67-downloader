@@ -11,6 +11,7 @@ import shutil
 from colorama import Fore, Back, Style
 from datetime import date, datetime
 from ast import literal_eval
+import version
 
 def get():
     tkinter.Tk().withdraw()
@@ -21,8 +22,6 @@ def get():
 print(Back.WHITE+Fore.BLACK+"SVP veuillez renseigner où est votre dossier mods minecraft.")
 
 time.sleep(2)
-
-adress = get()
 
 def createDirectory(name, parent):
     path = parent+"/"+name
@@ -35,52 +34,10 @@ def createDirectory(name, parent):
         os.mkdir(path)
         print("Directory '% s' created" % directory)
 
+update = version.needUpdate()
 
-def versionCheck():
-
-    user = os.getlogin()
-
-    createDirectory("alpha67_MP", "C:/Users/"+user)
-
-    createDirectory("mods", "C:/Users/"+user+"/alpha67_MP")
-    data = """{ok: salut}"""
-    response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/desktop-tutorial/releases")
-    data = json.loads(response.read())
-    data = data[0]
-    data = data["tag_name"]
-
-
-    da = date.today()
-    now = datetime.now()
-
-    try:
-        f = open('C:/Users/' + user + '/alpha67_MP/test.json')
-
-        print("File data is already create.")
-        time.sleep(0.5)
-        print("checking the current version.")
-
-        with open('C:/Users/' + user + '/alpha67_MP/test.json', 'r') as json_file:
-            uInfo = json.load(json_file)
-            uInfo = literal_eval(uInfo)
-            uInfo = uInfo["version"]
-        if uInfo != data:
-            return True
-        else:
-            return False
-        # Do something with the file
-    except IOError:
-        with open('C:/Users/' + user + '/alpha67_MP/test.json', 'w') as outfile:
-            json.dump(str({"time": str(now), "version": None}), outfile)
-        print("File not accessible, starting his creation")
-        return True
-
-
-
-
-versionCheck()
-
-if versionCheck() == True:
+if update == True:
+    adress = get()
     try:
         None
     except:
