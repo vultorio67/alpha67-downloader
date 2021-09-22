@@ -13,18 +13,22 @@ from datetime import date, datetime
 from ast import literal_eval
 import version
 from tabulate import tabulate
+import winrt.windows.ui.notifications as notifications
+import winrt.windows.data.xml.dom as dom
+
+import webbrowser
+from win10toast_click import ToastNotifier
 
 
 
 user = os.getlogin()
 
 def get():
+    print(Back.WHITE + Fore.BLACK + "SVP veuillez renseigner où est votre dossier mods minecraft.")
     tkinter.Tk().withdraw()
     user = os.getlogin()
     folder_path = dirName = filedialog.askdirectory(initialdir="C:/Users/"+user+"/AppData/Roaming/.minecraft", title='Please select a directory')
     return folder_path
-
-print(Back.WHITE+Fore.BLACK+"SVP veuillez renseigner où est votre dossier mods minecraft.")
 
 time.sleep(2)
 
@@ -49,18 +53,21 @@ if not CHECK_FOLDER:
     createDirectory("mods", "C:/Users/" + user + "/alpha67_MP")
     update = True
     adress = get()
+    needGetJsonAdress = False
 
 else:
     update = version.needUpdate()
+    needGetJsonAdress = True
 
 if update == True:
 
     infoFile = 'C:/Users/' + user + '/alpha67_MP/data.json'
 
-    with open(infoFile, 'r') as file:
-        uInfo = json.load(file)
-        uInfo = literal_eval(uInfo)
-        adress = uInfo['path']
+    if needGetJsonAdress == True:
+        with open(infoFile, 'r') as file:
+            uInfo = json.load(file)
+            uInfo = literal_eval(uInfo)
+            adress = uInfo['path']
     try:
         None
     except:
@@ -137,13 +144,35 @@ if update == True:
 
     with open('C:/Users/' + user + '/alpha67_MP/listMod.txt', 'w') as f:
         f.write('')
-
+    me = ""
     with open('C:/Users/' + user + '/alpha67_MP/listMod.txt', 'a') as f:
         for files in os.listdir(adress):
             if os.path.isfile(os.path.join(adress, files)):
                 f.write(files)
                 print(files)
-                print(tabulate([[files]], headers=['Name', 'Age']))
+                me = me + "[ "+files+" ]"
+                me = me
+
+    x = me.split(" ")
+    print(tabulate([[x]], headers=['Name', 'Age']))
+
+    print(":::::Le modpack est correctement installer.")
+
+    time.sleep(4)
 
 else:
     print(Fore.GREEN+"vous êtes à jour.")
+    toaster = ToastNotifier()
+
+    # showcase
+    toaster.show_toast(
+        "Alpha67 : Votre modpack est à jour",  # title
+        "cool",  # message
+        icon_path="icon.ico",  # 'icon_path'
+        duration=5,  # for how many seconds toast should be visible; None = leave notification in Notification Center
+        threaded=True,
+        # True = run other code in parallel; False = code execution will wait till notification disappears
+        callback_on_click=open_url  # click notification to run function
+    )
+
+    time.sleep(4)
