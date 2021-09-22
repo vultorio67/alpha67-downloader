@@ -1,16 +1,22 @@
-from tabulate import tabulate
-import os
 import json
-from ast import literal_eval
+import urllib.request
 import time
-import winrt.windows.ui.notifications as notifications
-import winrt.windows.data.xml.dom as dom
+import os
+import shutil
+from colorama import Fore, Back, Style
+from datetime import date, datetime
+from ast import literal_eval
+import version
+import tkinter
+from tkinter import filedialog
+from win10toast import ToastNotifier
+from win10toast import *
 
-import webbrowser
-from win10toast_click import ToastNotifier
+toast = ToastNotifier()
+toast.show_toast( title="Notification", msg="Here comes the message", icon_path=None, duration=5, threaded=False, callback_on_click=None)
 
 # function
-page_url = 'http://example.com/'
+"""page_url = 'http://example.com/'
 
 def open_url():
     print("download")
@@ -26,4 +32,4 @@ toaster.show_toast(
     duration=5, # for how many seconds toast should be visible; None = leave notification in Notification Center
     threaded=True, # True = run other code in parallel; False = code execution will wait till notification disappears
     callback_on_click=open_url # click notification to run function
-    )
+    )"""

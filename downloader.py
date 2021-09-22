@@ -1,23 +1,16 @@
-import re
 import json
-import urllib
 import urllib.request
 import time
-import tkinter
-from tkinter import filedialog
 import os
-import os.path
 import shutil
 from colorama import Fore, Back, Style
 from datetime import date, datetime
 from ast import literal_eval
 import version
-from tabulate import tabulate
-import winrt.windows.ui.notifications as notifications
-import winrt.windows.data.xml.dom as dom
-
-import webbrowser
+import tkinter
+from tkinter import filedialog
 from win10toast_click import ToastNotifier
+
 
 
 
@@ -30,7 +23,6 @@ def get():
     folder_path = dirName = filedialog.askdirectory(initialdir="C:/Users/"+user+"/AppData/Roaming/.minecraft", title='Please select a directory')
     return folder_path
 
-time.sleep(2)
 
 def createDirectory(name, parent):
     path = parent+"/"+name
@@ -154,28 +146,38 @@ if update == True:
                 me = me
 
     x = me.split(" ")
-    print(tabulate([[x]], headers=['Name', 'Age']))
 
     print(":::::Le modpack est correctement installer.")
 
-    time.sleep(4)
-
-else:
-    print(Fore.GREEN+"vous êtes à jour.")
     toaster = ToastNotifier()
 
     # showcase
     toaster.show_toast(
-        "Alpha67 : Votre modpack est à jour",  # title
-        "cool",  # message
+        "=)=) Alpha67 =)=)",  # title
+        "Le modpack est correctement installer.",  # message
         icon_path="icon.ico",  # 'icon_path'
         duration=5,  # for how many seconds toast should be visible; None = leave notification in Notification Center
         threaded=True,
         # True = run other code in parallel; False = code execution will wait till notification disappears
-        callback_on_click=open_url  # click notification to run function
+        callback_on_click=None  # click notification to run function
     )
 
-    time.sleep(4)
+
+else:
+    # initialize
+    toaster = ToastNotifier()
+
+    # showcase
+    toaster.show_toast(
+        "Alpha67 ",  # title
+        "Vous êtes à jour.=)",  # message
+        icon_path="icon.ico",  # 'icon_path'
+        duration=5,  # for how many seconds toast should be visible; None = leave notification in Notification Center
+        threaded=True,
+        # True = run other code in parallel; False = code execution will wait till notification disappears
+        callback_on_click=None  # click notification to run function
+    )
+
 """except:
     now = datetime.now()
     print("error!!!!")
