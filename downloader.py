@@ -12,6 +12,11 @@ from colorama import Fore, Back, Style
 from datetime import date, datetime
 from ast import literal_eval
 import version
+from tabulate import tabulate
+
+
+
+user = os.getlogin()
 
 def get():
     tkinter.Tk().withdraw()
@@ -34,10 +39,28 @@ def createDirectory(name, parent):
         os.mkdir(path)
         print("Directory '% s' created" % directory)
 
-update = version.needUpdate()
+MYDIR = "C:/Users/" + user + "/alpha67_MP"
+CHECK_FOLDER = os.path.isdir(MYDIR)
+# If folder doesn't exist, then create it.
+if not CHECK_FOLDER:
+    os.makedirs(MYDIR)
+    print("created folder : ", MYDIR)
+    createDirectory("alpha67_MP", "C:/Users/" + user)
+    createDirectory("mods", "C:/Users/" + user + "/alpha67_MP")
+    update = True
+    adress = get()
+
+else:
+    update = version.needUpdate()
 
 if update == True:
-    adress = get()
+
+    infoFile = 'C:/Users/' + user + '/alpha67_MP/data.json'
+
+    with open(infoFile, 'r') as file:
+        uInfo = json.load(file)
+        uInfo = literal_eval(uInfo)
+        adress = uInfo['path']
     try:
         None
     except:
@@ -104,7 +127,7 @@ if update == True:
                 print(files)
                 f.write(files+"\n")
 
-    with open('C:/Users/' + user + '/alpha67_MP/test.json', 'w') as outfile:
+    with open('C:/Users/' + user + '/alpha67_MP/data.json', 'w') as outfile:
         json.dump(str({"time": str(now), "version": data, "path": adress}), outfile)
 
 
@@ -120,6 +143,7 @@ if update == True:
             if os.path.isfile(os.path.join(adress, files)):
                 f.write(files)
                 print(files)
+                print(tabulate([[files]], headers=['Name', 'Age']))
 
 else:
     print(Fore.GREEN+"vous êtes à jour.")

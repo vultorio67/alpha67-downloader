@@ -28,10 +28,6 @@ def createDirectory(name, parent):
 def needUpdate():
     def needUpdateJson():
         user = os.getlogin()
-
-        createDirectory("alpha67_MP", "C:/Users/" + user)
-
-        createDirectory("mods", "C:/Users/" + user + "/alpha67_MP")
         data = """{ok: salut}"""
         response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/desktop-tutorial/releases")
         data = json.loads(response.read())
@@ -69,7 +65,13 @@ def needUpdate():
         i = 0
         ok = ""
 
-        path = r'C:\Users\evanm\AppData\Roaming\.minecraft\mods'
+        infoFile = 'C:/Users/' + user + '/alpha67_MP/data.json'
+
+        with open(infoFile, 'r') as file:
+            uInfo = json.load(file)
+            uInfo = literal_eval(uInfo)
+            path = uInfo['path']
+
 
         def existFile():
             try:
