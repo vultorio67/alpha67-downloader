@@ -91,8 +91,6 @@ if update == True:
 
     user = os.getlogin()
 
-
-
     urllib.request.urlretrieve(url, "C:/Users/"+user+"/alpha67_MP/mods/mp.zip")
 
     original = r'C:/Users/'+user+'/alpha67_MP/mp.zip'

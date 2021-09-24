@@ -48,6 +48,7 @@ def needUpdate():
                 uInfo = json.load(json_file)
                 uInfo = literal_eval(uInfo)
                 uInfo = uInfo["version"]
+
             if uInfo != data:
                 return True
             else:
