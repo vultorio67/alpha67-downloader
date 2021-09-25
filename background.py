@@ -57,9 +57,9 @@ def needUpdateJson():
             print("File not accessible, starting his creation")
             return True
 
+def checkMpUpdate():
 
-
-while True:
+    user = os.getlogin()
 
     MYDIR = "C:/Users/" + user + "/alpha67_MP"
     CHECK_FOLDER = os.path.isdir(MYDIR)
@@ -69,7 +69,7 @@ while True:
         print("created folder : ", MYDIR)
         createDirectory("alpha67_MP", "C:/Users/" + user)
         createDirectory("mods", "C:/Users/" + user + "/alpha67_MP")
-        break
+
 
     else:
         update = version.needUpdate()
@@ -85,7 +85,6 @@ while True:
             uInfo = json.load(file)
             uInfo = literal_eval(uInfo)
             adress = uInfo['path']
-
 
         response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/desktop-tutorial/releases")
         data = json.loads(response.read())
@@ -131,6 +130,11 @@ while True:
 
         with open('C:/Users/' + user + '/alpha67_MP/data.json', 'w+') as outfile:
             json.dump(str({"time": str(now), "version": data, "path": adress}), outfile)
+
+
+
+while True:
+    checkMpUpdate()
 
     time.sleep(120)
 

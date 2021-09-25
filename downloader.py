@@ -10,11 +10,20 @@ import version
 import tkinter
 from tkinter import filedialog
 from win10toast_click import ToastNotifier
-
-
+import glob
+import pydirectory
+import win32com.client
 
 
 user = os.getlogin()
+
+shell = win32com.client.Dispatch("WScript.Shell")
+shortcut = shell.CreateShortCut(r"C:\Users\vultorio\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\background.lnk")
+shortcut.Targetpath = r"C:\Program Files\alpha67-downloader\background.exe"
+shortcut.save()
+
+
+
 
 def get():
     print(Back.WHITE + Fore.BLACK + "SVP veuillez renseigner où est votre dossier mods minecraft.")
@@ -60,6 +69,13 @@ if update == True:
             uInfo = json.load(file)
             uInfo = literal_eval(uInfo)
             adress = uInfo['path']
+
+    for files in os.listdir(adress):
+        if os.path.isfile(os.path.join(adress, files)):
+            print(files)
+            os.remove(adress+'/'+files)
+
+
     try:
         None
     except:
