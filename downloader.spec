@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['downloader.py'],
-             pathex=['C:\\Users\\vultorio\\Desktop\\alpha67-downloader'],
+             pathex=['C:\\Users\\evanm\\Desktop\\minecraft mod\\alpha67-downloader'],
              binaries=[],
              datas=[],
              hiddenimports=[],
