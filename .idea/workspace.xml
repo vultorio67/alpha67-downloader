@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b8b59390-d801-42d3-80a5-8f853b71e3d1" name="Changes" comment="" />
+    <list default="true" id="b8b59390-d801-42d3-80a5-8f853b71e3d1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/alpha/downloader.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/downloader/downloader.exe.manifest" beforeDir="false" afterPath="$PROJECT_DIR$/build/downloader/downloader.exe.manifest" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/downloader.exe" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
