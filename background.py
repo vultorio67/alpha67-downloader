@@ -13,23 +13,20 @@ from win10toast_click import ToastNotifier
 
 user = os.getlogin()
 
-while True:
 
-    MYDIR = "C:/Users/" + user + "/alpha67_MP"
-    CHECK_FOLDER = os.path.isdir(MYDIR)
-    # If folder doesn't exist, then create it.
-    if not CHECK_FOLDER:
-        os.makedirs(MYDIR)
-        print("created folder : ", MYDIR)
-        createDirectory("alpha67_MP", "C:/Users/" + user)
-        createDirectory("mods", "C:/Users/" + user + "/alpha67_MP")
-        break
 
-    else:
-        update = version.needUpdate()
-        needGetJsonAdress = True
+def createDirectory(name, parent):
+    path = parent+"/"+name
+    isdir = os.path.isdir(path)
+    if isdir == False:
 
-    def needUpdateJson():
+        directory = name
+        parent_dir = parent
+        path = os.path.join(parent_dir, directory)
+        os.mkdir(path)
+        print("Directory '% s' created" % directory)
+
+def needUpdateJson():
 
         user = os.getlogin()
 
@@ -59,6 +56,24 @@ while True:
                 json.dump(str({"time": str(now), "version": None}), outfile)
             print("File not accessible, starting his creation")
             return True
+
+
+
+while True:
+
+    MYDIR = "C:/Users/" + user + "/alpha67_MP"
+    CHECK_FOLDER = os.path.isdir(MYDIR)
+    # If folder doesn't exist, then create it.
+    if not CHECK_FOLDER:
+        os.makedirs(MYDIR)
+        print("created folder : ", MYDIR)
+        createDirectory("alpha67_MP", "C:/Users/" + user)
+        createDirectory("mods", "C:/Users/" + user + "/alpha67_MP")
+        break
+
+    else:
+        update = version.needUpdate()
+        needGetJsonAdress = True
 
     up = needUpdateJson()
 
@@ -92,6 +107,20 @@ while True:
             zip.printdir()
             zip.extractall(adress)
 
+        toaster = ToastNotifier()
+
+        # showcase
+        toaster.show_toast(
+            "Alpha67 ",  # title
+            "Une nouvelle version du modpack viens d'être installer.",  # message
+            icon_path="icon.ico",  # 'icon_path'
+            duration=5,
+            # for how many seconds toast should be visible; None = leave notification in Notification Center
+            threaded=True,
+            # True = run other code in parallel; False = code execution will wait till notification disappears
+            callback_on_click=None  # click notification to run function
+        )
+
         now = datetime.now()
 
         response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/desktop-tutorial/releases")
@@ -103,5 +132,9 @@ while True:
         with open('C:/Users/' + user + '/alpha67_MP/data.json', 'w+') as outfile:
             json.dump(str({"time": str(now), "version": data, "path": adress}), outfile)
 
-    time.sleep(5)
+    time.sleep(120)
+
+
+
+
 
