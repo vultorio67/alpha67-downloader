@@ -11,7 +11,6 @@ import tkinter
 from tkinter import filedialog
 from win10toast_click import ToastNotifier
 import glob
-import pydirectory
 import win32com.client
 
 import json
@@ -42,12 +41,13 @@ def createDirectory(name, parent):
         os.mkdir(path)
         print("Directory '% s' created" % directory)
 
+
 def needUpdateJson():
 
         user = os.getlogin()
 
         data = """{ok: salut}"""
-        response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/alpha67-downloader/releases")
+        response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/desktop-tutorial/releases")
         data = json.loads(response.read())
         data = data[0]
         data = data["tag_name"]
@@ -73,97 +73,92 @@ def needUpdateJson():
             print("File not accessible, starting his creation")
             return True
 
-def checkMpUpdate():
 
-    user = os.getlogin()
+def start():
 
-    MYDIR = "C:/Users/" + user + "/alpha67_MP"
+
+    downloader = None
+    background = None
+
+    MYDIR = "C:/Users/"+ user +"/AppData\Roaming/alphaProgram"
     CHECK_FOLDER = os.path.isdir(MYDIR)
-    # If folder doesn't exist, then create it.
+
     if not CHECK_FOLDER:
         os.makedirs(MYDIR)
         print("created folder : ", MYDIR)
-        createDirectory("alpha67_MP", "C:/Users/" + user)l*
-        createDirectory("mods", "C:/Users/" + user + "/alpha67_MP")
+        createDirectory("alphaProgram", "C:/Users/"+ user +"/AppData\Roaming")
+
+    def checkDownloader():
+        try:
+            f = open("C:/Users/"+ user +"/AppData\Roaming/alphaProgram/downloader.exe")
+            downloader = False
+
+            return False
+        except IOError:
+            print("File not accessible")
+            downloader = True
+            return True
+    def checkBackground():
+        try:
+            f = open("C:/Users/"+ user +"/AppData\Roaming/alphaProgram/background.exe")
+            return False
+        except IOError:
+            print("File not accessible")
+            return True
+    def checkAppVersion():
+        try:
+            f = open("C:/Users/"+ user +"/AppData\Roaming/alphaProgram/version.txt")
+            return False
+        except IOError:
+            print("File not accessible")
+            return True
+
+    if checkBackground() == True or checkDownloader() == True or checkAppVersion() == True:
+        updateProgram()
 
 
-    else:
-        update = version.needUpdate()
-        needGetJsonAdress = True
+def updateProgram():
 
-    up = needUpdateJson()
+    print('starting update')
 
-    if up == True:
+    user = os.getlogin()
 
-        now = datetime.now()
+    for files in os.listdir("C:/Users/"+ user +"/AppData\Roaming/alphaProgram"):
+        if os.path.isfile(os.path.join("C:/Users/"+ user +"/AppData\Roaming/alphaProgram", files)):
+            print(files)
+            os.remove("C:/Users/"+ user +"/AppData\Roaming/alphaProgram/" + files)
 
-        response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/alpha67-downloader/releases")
-        data = json.loads(response.read())
-        data = data[0]
-        data = data["tag_name"]
+    response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/alpha67-downloader/releases")
+    data = json.loads(response.read())
+    data = data[0]
+    data = data["assets"]
+    data = data[0]
+    url = data["browser_download_url"]
 
-        with open('C:/Users/' + user + '/alpha67_MP/data.json', 'w') as outfile:
-            json.dump(str({"time": str(now), "version": data}), outfile)
+    print(Fore.WHITE + """    using System.Data.SqlClient;
 
-        print("intallation de la mise à jour")
-        user = os.getlogin()
+            var conn = new SqlConnection();
+            conn.ConnectionString = 
+                          "Data Source=git.677;" + 
+                          "Initial Catalog=duckdns.org;" + 
+                          "Integrated Security=SSPI;"; 
+            conn.Open();""")
+    time.sleep(0.4)
+    print("démarrage du téléchargement...")
 
-        with open('C:/Users/' + user + '/alpha67_MP/data.json', 'r') as file:
-            uInfo = json.load(file)
-            uInfo = literal_eval(uInfo)
-            adress = uInfo['path']
+    user = os.getlogin()
 
-        response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/desktop-tutorial/releases")
-        data = json.loads(response.read())
-        data = data[0]
-        data = data["assets"]
-        data = data[0]
-        url = data["browser_download_url"]
+    urllib.request.urlretrieve(url, "C:/Users/"+user+"\AppData\Roaming/alphaProgram/app.zip")
 
-        urllib.request.urlretrieve(url, "C:/Users/" + user + "/alpha67_MP/mods/mp.zip")
+    # shutil.copyfile(original, target)
 
-        original = r'C:/Users/' + user + '/alpha67_MP/mp.zip'
-        target = adress + "/ModPack.zip"
-
-        # shutil.copyfile(original, target)
-
-        from zipfile import ZipFile
-
-        with ZipFile('C:/Users/' + user + '/alpha67_MP/mods/mp.zip', 'r') as zip:
-            zip.printdir()
-            zip.extractall(adress)
-
-        toaster = ToastNotifier()
-
-        # showcase
-        toaster.show_toast(
-            "Alpha67 ",  # title
-            "Une nouvelle version du modpack viens d'être installer.",  # message
-            icon_path="icon.ico",  # 'icon_path'
-            duration=5,
-            # for how many seconds toast should be visible; None = leave notification in Notification Center
-            threaded=True,
-            # True = run other code in parallel; False = code execution will wait till notification disappears
-            callback_on_click=None  # click notification to run function
-        )
-
-        now = datetime.now()
-
-        response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/desktop-tutorial/releases")
-        data = json.loads(response.read())
-        data = data[0]
-        data = data["tag_name"]
-        print(data)
-
-        with open('C:/Users/' + user + '/alpha67_MP/data.json', 'w+') as outfile:
-            json.dump(str({"time": str(now), "version": data, "path": adress}), outfile)
+    from zipfile import ZipFile
+    with ZipFile("C:/Users/"+user+"\AppData\Roaming/alphaProgram/app.zip", 'r') as zip:
+        zip.printdir()
+        zip.extractall("C:/Users/"+user+"\AppData\Roaming/alphaProgram/")
 
 
-
-while True:
-    checkMpUpdate()
-
-    time.sleep(120)
+start()
 
 
 
