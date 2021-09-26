@@ -6,7 +6,6 @@ import shutil
 from colorama import Fore, Back, Style
 from datetime import date, datetime
 from ast import literal_eval
-import version
 import tkinter
 from tkinter import filedialog
 from win10toast_click import ToastNotifier
@@ -47,10 +46,10 @@ def needUpdateJson():
         user = os.getlogin()
 
         data = """{ok: salut}"""
-        response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/desktop-tutorial/releases")
+        response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/alpha67-downloader/releases")
         data = json.loads(response.read())
         data = data[0]
-        data = data["tag_name"]
+        version = data["tag_name"]
 
         da = date.today()
         now = datetime.now()
@@ -58,10 +57,9 @@ def needUpdateJson():
         try:
             f = open('C:/Users/' + user + '/alpha67_MP/data.json')
 
-            with open('C:/Users/' + user + '/alpha67_MP/data.json', 'r') as json_file:
-                uInfo = json.load(json_file)
-                uInfo = literal_eval(uInfo)
-                uInfo = uInfo["version"]
+            f = open("C:/Users/"+ user +"/AppData\Roaming/alphaProgram/version.txt", "r")
+            print(f.read())
+
             if uInfo != data:
                 return True
             else:
@@ -105,7 +103,7 @@ def start():
         except IOError:
             print("File not accessible")
             return True
-    def checkAppVersion():
+    def checkAppVersionFile():
         try:
             f = open("C:/Users/"+ user +"/AppData\Roaming/alphaProgram/version.txt")
             return False
@@ -113,7 +111,7 @@ def start():
             print("File not accessible")
             return True
 
-    if checkBackground() == True or checkDownloader() == True or checkAppVersion() == True:
+    if checkBackground() == True or checkDownloader() == True or checkAppVersionFile() == True:
         updateProgram()
 
 
@@ -156,6 +154,15 @@ def updateProgram():
     with ZipFile("C:/Users/"+user+"\AppData\Roaming/alphaProgram/app.zip", 'r') as zip:
         zip.printdir()
         zip.extractall("C:/Users/"+user+"\AppData\Roaming/alphaProgram/")
+
+    response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/alpha67-downloader/releases")
+    data = json.loads(response.read())
+    data = data[0]
+    version1 = data["tag_name"]
+
+    f = open("C:/Users/"+ user +"/AppData\Roaming/alphaProgram/version.txt", "w")
+    f.write(str(version1))
+    f.close()
 
 
 start()
