@@ -6,27 +6,18 @@ import shutil
 from colorama import Fore, Back, Style
 from datetime import date, datetime
 from ast import literal_eval
-import tkinter
-from tkinter import filedialog
-from win10toast_click import ToastNotifier
-import glob
-import win32com.client
-
-import json
-import urllib.request
-import time
-import os
-import shutil
-from colorama import Fore, Back, Style
-from datetime import date, datetime
-from ast import literal_eval
 import version
 import tkinter
 from tkinter import filedialog
 from win10toast_click import ToastNotifier
+import win32com.client
 
 user = os.getlogin()
 
+shell = win32com.client.Dispatch("WScript.Shell")
+shortcut = shell.CreateShortCut(r'C:\Users/'+ user +'/AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup/Updater.lnk')
+shortcut.Targetpath = r"C:\Program Files\alpha67-downloader/Updater.exe"
+shortcut.save()
 
 
 def createDirectory(name, parent):
@@ -55,19 +46,16 @@ def needUpdateJson():
         now = datetime.now()
 
         try:
-            f = open('C:/Users/' + user + '/alpha67_MP/data.json')
 
             f = open("C:/Users/"+ user +"/AppData\Roaming/alphaProgram/version.txt", "r")
-            print(f.read())
+            txtVersion = f.read()
 
-            if uInfo != data:
+            if txtVersion != version:
                 return True
             else:
                 return False
             # Do something with the file
         except IOError:
-            with open('C:/Users/' + user + '/alpha67_MP/data.json', 'w') as outfile:
-                json.dump(str({"time": str(now), "version": None}), outfile)
             print("File not accessible, starting his creation")
             return True
 
@@ -113,6 +101,13 @@ def start():
 
     if checkBackground() == True or checkDownloader() == True or checkAppVersionFile() == True:
         updateProgram()
+    else:
+        print("all files are correctly install")
+
+    if needUpdateJson() == True:
+        updateProgram()
+    else:
+        print("you are up to date")
 
 
 def updateProgram():
@@ -120,6 +115,13 @@ def updateProgram():
     print('starting update')
 
     user = os.getlogin()
+
+    for files in os.listdir("C:/Users/"+ user +"/AppData\Roaming/alphaProgram"):
+        if os.path.isfile(os.path.join("C:/Users/"+ user +"/AppData\Roaming/alphaProgram", files)):
+            if '.exe' in files:
+                print("exe file found")
+                os.system("taskkill /im "+ files +" /f")
+
 
     for files in os.listdir("C:/Users/"+ user +"/AppData\Roaming/alphaProgram"):
         if os.path.isfile(os.path.join("C:/Users/"+ user +"/AppData\Roaming/alphaProgram", files)):
@@ -146,6 +148,8 @@ def updateProgram():
 
     user = os.getlogin()
 
+    print(url)
+
     urllib.request.urlretrieve(url, "C:/Users/"+user+"\AppData\Roaming/alphaProgram/app.zip")
 
     # shutil.copyfile(original, target)
@@ -164,8 +168,27 @@ def updateProgram():
     f.write(str(version1))
     f.close()
 
+    toaster = ToastNotifier()
 
-start()
+    # showcase
+    toaster.show_toast(
+        "Alpha67 ",  # title
+        "Une nouvelle version de Alpha67 downloader viens d'être installer.",  # message
+        icon_path="icon.ico",  # 'icon_path'
+        duration=5,
+        # for how many seconds toast should be visible; None = leave notification in Notification Center
+        threaded=True,
+        # True = run other code in parallel; False = code execution will wait till notification disappears
+        callback_on_click=None  # click notification to run function
+    )
+
+
+
+while True:
+    start()
+    time.sleep(30)
+
+
 
 
 

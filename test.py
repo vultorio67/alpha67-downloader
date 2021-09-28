@@ -1,3 +1,8 @@
 import os
 
-os.remove('C:/Program Files/alpha67-downloader/downloader.exe')
+user = os.getlogin()
+
+for files in os.listdir("C:/Users/" + user + "/AppData\Roaming/alphaProgram"):
+    if os.path.isfile(os.path.join("C:/Users/" + user + "/AppData\Roaming/alphaProgram", files)):
+        print(files)
+os.system("taskkill /im background.exe /f")

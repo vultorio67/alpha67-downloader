@@ -10,6 +10,7 @@ import version
 import tkinter
 from tkinter import filedialog
 from win10toast_click import ToastNotifier
+import win32com.client
 
 user = os.getlogin()
 
@@ -136,7 +137,7 @@ def checkMpUpdate():
 while True:
     checkMpUpdate()
 
-    time.sleep(120)
+    time.sleep(300)
 
 
 
