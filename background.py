@@ -14,7 +14,13 @@ import win32com.client
 
 user = os.getlogin()
 
-
+try:
+    shell = win32com.client.Dispatch("WScript.Shell")
+    shortcut = shell.CreateShortCut(r'C:\Users/'+ user +'/AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup/background.lnk')
+    shortcut.Targetpath = r"C:\Users\evanm\AppData\Roaming\alphaProgram/background.exe"
+    shortcut.save()
+except:
+    print("can't create shortcut :: background")
 
 def createDirectory(name, parent):
     path = parent+"/"+name

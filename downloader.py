@@ -11,17 +11,9 @@ import tkinter
 from tkinter import filedialog
 from win10toast_click import ToastNotifier
 import glob
-import win32com.client
 
 
 user = os.getlogin()
-
-#shell = win32com.client.Dispatch("WScript.Shell")
-#shortcut = shell.CreateShortCut(r"C:\Users\vultorio\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\background.lnk")
-#shortcut.Targetpath = r"C:\Program Files\alpha67-downloader\background.exe"
-#shortcut.save()
-
-
 
 
 def get():

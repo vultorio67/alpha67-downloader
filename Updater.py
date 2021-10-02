@@ -11,12 +11,23 @@ import tkinter
 from tkinter import filedialog
 from win10toast_click import ToastNotifier
 import win32com.client
+import subprocess
+from zipfile import ZipFile
+
+s = subprocess.check_output('tasklist', shell=True)
+if "Updater.exe" in str(s):
+    print("ok")
 
 user = os.getlogin()
 
 shell = win32com.client.Dispatch("WScript.Shell")
 shortcut = shell.CreateShortCut(r'C:\Users/'+ user +'/AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup/Updater.lnk')
 shortcut.Targetpath = r"C:\Program Files\alpha67-downloader/Updater.exe"
+shortcut.save()
+
+shell = win32com.client.Dispatch("WScript.Shell")
+shortcut = shell.CreateShortCut(r'C:\Users/' + user + '/AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup/background.lnk')
+shortcut.Targetpath = r"C:\Users\evanm\AppData\Roaming\alphaProgram/background.exe"
 shortcut.save()
 
 
@@ -112,81 +123,98 @@ def start():
 
 def updateProgram():
 
-    print('starting update')
+    try:
+        print('starting update')
 
-    user = os.getlogin()
+        user = os.getlogin()
 
-    for files in os.listdir("C:/Users/"+ user +"/AppData\Roaming/alphaProgram"):
-        if os.path.isfile(os.path.join("C:/Users/"+ user +"/AppData\Roaming/alphaProgram", files)):
-            if '.exe' in files:
-                print("exe file found")
-                os.system("taskkill /im "+ files +" /f")
+        for files in os.listdir("C:/Users/"+ user +"/AppData\Roaming/alphaProgram"):
+            if os.path.isfile(os.path.join("C:/Users/"+ user +"/AppData\Roaming/alphaProgram", files)):
+                if '.exe' in files:
+                    print("exe file found")
+                    os.system("taskkill /im "+ files +" /f")
 
 
-    for files in os.listdir("C:/Users/"+ user +"/AppData\Roaming/alphaProgram"):
-        if os.path.isfile(os.path.join("C:/Users/"+ user +"/AppData\Roaming/alphaProgram", files)):
-            print(files)
-            os.remove("C:/Users/"+ user +"/AppData\Roaming/alphaProgram/" + files)
+        for files in os.listdir("C:/Users/"+ user +"/AppData\Roaming/alphaProgram"):
+            if os.path.isfile(os.path.join("C:/Users/"+ user +"/AppData\Roaming/alphaProgram", files)):
+                print(files)
+                os.remove("C:/Users/"+ user +"/AppData\Roaming/alphaProgram/" + files)
 
-    response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/alpha67-downloader/releases")
-    data = json.loads(response.read())
-    data = data[0]
-    data = data["assets"]
-    data = data[0]
-    url = data["browser_download_url"]
+        response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/alpha67-downloader/releases")
+        data = json.loads(response.read())
+        data = data[0]
+        data = data["assets"]
+        data = data[0]
+        url = data["browser_download_url"]
 
-    print(Fore.WHITE + """    using System.Data.SqlClient;
+        print(Fore.WHITE + """    using System.Data.SqlClient;
+    
+                var conn = new SqlConnection();
+                conn.ConnectionString = 
+                              "Data Source=git.677;" + 
+                              "Initial Catalog=duckdns.org;" + 
+                              "Integrated Security=SSPI;"; 
+                conn.Open();""")
+        time.sleep(0.4)
+        print("démarrage du téléchargement...")
 
-            var conn = new SqlConnection();
-            conn.ConnectionString = 
-                          "Data Source=git.677;" + 
-                          "Initial Catalog=duckdns.org;" + 
-                          "Integrated Security=SSPI;"; 
-            conn.Open();""")
-    time.sleep(0.4)
-    print("démarrage du téléchargement...")
+        user = os.getlogin()
 
-    user = os.getlogin()
+        print(url)
 
-    print(url)
+        urllib.request.urlretrieve(url, "C:/Users/"+user+"\AppData\Roaming/alphaProgram/app.zip")
 
-    urllib.request.urlretrieve(url, "C:/Users/"+user+"\AppData\Roaming/alphaProgram/app.zip")
+        # shutil.copyfile(original, target)
 
-    # shutil.copyfile(original, target)
+        with ZipFile("C:/Users/"+user+"\AppData\Roaming/alphaProgram/app.zip", 'r') as zip:
+            zip.printdir()
+            zip.extractall("C:/Users/"+user+"\AppData\Roaming/alphaProgram/")
 
-    from zipfile import ZipFile
-    with ZipFile("C:/Users/"+user+"\AppData\Roaming/alphaProgram/app.zip", 'r') as zip:
-        zip.printdir()
-        zip.extractall("C:/Users/"+user+"\AppData\Roaming/alphaProgram/")
+        response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/alpha67-downloader/releases")
+        data = json.loads(response.read())
+        data = data[0]
+        version1 = data["tag_name"]
 
-    response = urllib.request.urlopen("https://api.github.com/repos/vultorio67/alpha67-downloader/releases")
-    data = json.loads(response.read())
-    data = data[0]
-    version1 = data["tag_name"]
+        print("starting background")
+        os.system("start C:/Users/"+user+"\AppData\Roaming/alphaProgram/background.exe")
 
-    f = open("C:/Users/"+ user +"/AppData\Roaming/alphaProgram/version.txt", "w")
-    f.write(str(version1))
-    f.close()
+        f = open("C:/Users/"+ user +"/AppData\Roaming/alphaProgram/version.txt", "w")
+        f.write(str(version1))
+        f.close()
 
-    toaster = ToastNotifier()
 
-    # showcase
-    toaster.show_toast(
-        "Alpha67 ",  # title
-        "Une nouvelle version de Alpha67 downloader viens d'être installer.",  # message
-        icon_path="icon.ico",  # 'icon_path'
-        duration=5,
-        # for how many seconds toast should be visible; None = leave notification in Notification Center
-        threaded=True,
-        # True = run other code in parallel; False = code execution will wait till notification disappears
-        callback_on_click=None  # click notification to run function
-    )
+
+        toaster = ToastNotifier()
+
+        # showcase
+        toaster.show_toast(
+            "Alpha67 ",  # title
+            "Une nouvelle version de Alpha67 downloader viens d'être installer.",  # message
+            icon_path="icon.ico",  # 'icon_path'
+            duration=5,
+            # for how many seconds toast should be visible; None = leave notification in Notification Center
+            threaded=True,
+            # True = run other code in parallel; False = code execution will wait till notification disappears
+            callback_on_click=None  # click notification to run function
+        )
+    except:
+        print("can't update program ")
+        for files in os.listdir("C:/Users/" + user + "/AppData\Roaming/alphaProgram"):
+            if os.path.isfile(os.path.join("C:/Users/" + user + "/AppData\Roaming/alphaProgram", files)):
+                print(files)
+                os.remove("C:/Users/" + user + "/AppData\Roaming/alphaProgram/" + files)
 
 
 
 while True:
-    start()
-    time.sleep(30)
+
+    try:
+
+        start()
+        time.sleep(120)
+    except:
+        print("program can't update or check for update.")
+        time.sleep(120)
 
 
 
