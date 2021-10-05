@@ -68,10 +68,13 @@ def needUpdate():
 
         infoFile = 'C:/Users/' + user + '/alpha67_MP/data.json'
 
-        with open(infoFile, 'r') as file:
-            uInfo = json.load(file)
-            uInfo = literal_eval(uInfo)
-            path = uInfo['path']
+        try:
+            with open(infoFile, 'r') as file:
+                uInfo = json.load(file)
+                uInfo = literal_eval(uInfo)
+                path = uInfo['path']
+        except:
+            return True
 
 
         def existFile():

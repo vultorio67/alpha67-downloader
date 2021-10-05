@@ -11,12 +11,7 @@ import tkinter
 from tkinter import filedialog
 from win10toast_click import ToastNotifier
 import win32com.client
-import subprocess
 from zipfile import ZipFile
-
-s = subprocess.check_output('tasklist', shell=True)
-if "Updater.exe" in str(s):
-    print("ok")
 
 user = os.getlogin()
 
@@ -176,27 +171,12 @@ def updateProgram():
         version1 = data["tag_name"]
 
         print("starting background")
-        os.system("start C:/Users/"+user+"\AppData\Roaming/alphaProgram/background.exe")
+        os.system("start C:/Users/%username%\AppData\Roaming/alphaProgram/background.exe")
 
         f = open("C:/Users/"+ user +"/AppData\Roaming/alphaProgram/version.txt", "w")
         f.write(str(version1))
         f.close()
 
-
-
-        toaster = ToastNotifier()
-
-        # showcase
-        toaster.show_toast(
-            "Alpha67 ",  # title
-            "Une nouvelle version de Alpha67 downloader viens d'être installer.",  # message
-            icon_path="icon.ico",  # 'icon_path'
-            duration=5,
-            # for how many seconds toast should be visible; None = leave notification in Notification Center
-            threaded=True,
-            # True = run other code in parallel; False = code execution will wait till notification disappears
-            callback_on_click=None  # click notification to run function
-        )
     except:
         print("can't update program ")
         for files in os.listdir("C:/Users/" + user + "/AppData\Roaming/alphaProgram"):
